@@ -13,3 +13,6 @@
 [submodule "git/lpy"]
 	path = git/lpy
 	url = https://github.com/abo-abo/lpy
+[submodule "git/whicher"]
+	path = git/whicher
+	url = https://github.com/abo-abo/whicher.git
