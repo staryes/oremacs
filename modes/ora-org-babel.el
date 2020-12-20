@@ -8,22 +8,22 @@
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((ruby . t)
-   (groovy . t)
+ '(;; (ruby . t)
+   ;; (groovy . t)
    (shell . t)
    (python . t)
    (emacs-lisp . t)
    (latex . t)
    (C . t)
-   (J . t)
-   (java . t)
-   (scheme . t)
+   ;; (J . t)
+   ;; (java . t)
+   ;; (scheme . t)
    (lisp . t)
    (latex . t)
    (R . t)
-   (sql . t)
+   ;; (sql . t)
    (calc . t)))
-(add-to-list 'org-src-lang-modes '("J" . j))
+;; (add-to-list 'org-src-lang-modes '("J" . j))
 
 ;;* C
 (setq org-babel-C-compiler "gcc -std=c99")
@@ -41,12 +41,12 @@
         (:cache . "yes")))
 
 ;;* Ruby
-(setq org-babel-default-header-args:ruby
-      '((:results . "pp output")))
+;; (setq org-babel-default-header-args:ruby
+;;       '((:results . "pp output")))
 
 ;;* Clojure
-(defvar org-babel-default-header-args:clojure
-  '((:results . "value") (:tangle . "yes")))
+;; (defvar org-babel-default-header-args:clojure
+;;   '((:results . "value") (:tangle . "yes")))
 
 ;;* Python
 (setq org-babel-default-header-args:python
