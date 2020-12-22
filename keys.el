@@ -327,6 +327,7 @@ _v_ariable     valu_e_"
   ("l" apropos-library)
   ("u" apropos-user-option)
   ("e" apropos-value))
+
 (global-set-key (kbd "C-M-o") 'hydra-window/body)
 (global-set-key (kbd "C-M-k") 'hydra-pause-resume)
 (global-set-key (kbd "C-M-k") 'ora-kill-current-buffer)
