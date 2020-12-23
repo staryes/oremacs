@@ -71,6 +71,7 @@
 (global-set-key (kbd "C-β") nil)                               ; [b]
 (global-set-key (kbd "C-ν") 'ora-angles)                       ; [n]
 (global-set-key (kbd "C-μ") 'headlong-bookmark-jump-other)     ; [m]
+
 ;;* Mod4 shortcuts
 (global-set-key "θ" 'ora-quotes)                             ; [q]
 ;; (global-set-key "ω" 'self-insert-command)                 ; [w]
@@ -98,6 +99,7 @@
 (global-set-key "β" nil)                                     ; [b]
 (global-set-key "ν" 'ace-window)                             ; [n]
 (global-set-key "μ" 'headlong-bookmark-jump)                 ; [m]
+
 ;;* Meta shortcuts
 (global-set-key (kbd "M-%") 'ora-query-replace)
 (global-set-key (kbd "M-.") nil)
@@ -384,6 +386,70 @@ _v_ariable     valu_e_"
   ("p" lispy-insert-prev-outline-body)
   ("C-o" nil nil))
 (hydra-set-property 'hydra-o :verbosity 1)
+
+(defhydra hydra-ctrl-semicolon (:exit t)
+  "hydra C-;-"
+  ("q" ora-single-quotes "single-quotes")              ; [q]
+  ("w" aya-create)                       ; [w]
+  ("e" eval-expression "eval")                  ; [e]
+  ("r" ora-eval-other-window)            ; [r]
+  ("t" nil)                               ; [t]
+  ("y" aya-create)                       ; [y]
+  ("u" moo-jump-local)                   ; [u]
+  ("i" ora-ctrltab "ctrltab")                          ; [i]
+  ("o" ora-backward-delete-whitespace) ; [o]
+  ("p" nil)                               ; [p]
+  ("a" org-capture "org-capture")                      ; [a]
+  ;; (global-set-key (kbd "C-_") 'undo)                          ; [u]
+  ("d" ora-dired-jump)                   ; [d]
+  ;; (global-set-key (kbd "C-φ") nil)                            ; [f]
+  ("g" upcase-word-toggle)               ; [g]
+  ("h" switch-to-buffer-other-window)    ; [h]
+  ("j" nil)                               ; [j]
+  ("k" ora-kill-current-buffer "kill-current-buffer")          ; [k]
+  ("l" rgrep)                            ; [l]
+  ("z" nil)                               ; [z]
+  ("x" nil)                               ; [x]
+  ("c" nil)                               ; [c]
+  ("v" nil)                               ; [v]
+  ("b" nil)                               ; [b]
+  ("n" ora-angles)                       ; [n]
+  ("m" headlong-bookmark-jump-other)     ; [m]
+)
+
+(global-set-key (kbd "C-c C-;") 'hydra-ctrl-semicolon/body)
+
+(defhydra hydra-semicolon (:exit t)
+  "hydra ;-"
+  ("q" ora-quotes "quotes")                             ; [q]
+;; (global-set-key "ω" 'self-insert-command)                 ; [w]
+;; (global-set-key (kbd "=") 'self-insert-command)           ; [e]
+  ("r" ora-brackets "brackets")                           ; [r]
+;; (global-set-key (kbd "~") 'self-insert-command)           ; [t]
+  ("y" aya-expand)                             ; [y]
+  ("u" universal-argument "M-u")                     ; [u]
+  ("i" hydra-avy/body "hydra-avy")                         ; [i]
+;; (global-set-key (kbd "DEL") 'self-insert-command)         ; [o]
+  ("p" avy-goto-char "avy-goto")                    ; [p]
+;; (global-set-key (kbd "-") 'self-insert-command)           ; [a]
+;; (global-set-key (kbd "_") 'self-insert-command)           ; [s]
+;; (global-set-key (kbd ":") 'self-insert-command)           ; [d]
+  ("f" ora-parens "parens")                             ; [f]
+;; (global-set-key (kbd ">") 'self-insert-command)           ; [g]
+  ("h" ora-save-and-switch-buffer)             ; [h]
+;; (global-set-key (kbd ";") 'self-insert-command)           ; [j]
+  ("k" hydra-k/body "hidra-k")                           ; [k]
+;; (global-set-key (kbd "<") 'self-insert-command)           ; [l]
+;; (global-set-key (kbd "+") 'self-insert-command)           ; [z]
+  ("x" lispy-right)                            ; [x]
+  ("c" ora-braces "braces")                             ; [c]
+;; (global-set-key (kbd "RET") 'newline)                     ; [v]
+  ("b" nil)                                     ; [b]
+  ("n" ace-window "ace-window")                             ; [n]
+  ("m" headlong-bookmark-jump "bookmark-jump")                 ; [m]
+  ("op" org-pomodoro "org-pomodoro")
+  )
+(global-set-key (kbd "C-;") 'hydra-semicolon/body)
 
 (defun lispy-insert-prev-outline-body ()
   (interactive)
