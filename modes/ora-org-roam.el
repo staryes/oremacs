@@ -1,5 +1,6 @@
 (use-package org-roam
   :diminish org-roam-mode)
+(require 'org-roam-protocol)
 
 (setq org-roam-directory
       (expand-file-name
@@ -26,7 +27,8 @@
   "Launcher for `org-roam'."
   ("i" org-roam-insert "insert")
   ("f" ora-org-roam-find-file "find-file")
-  ("v" org-roam-buffer-activate "backlinks"))
+  ("v" org-roam-buffer-activate "backlinks")
+  ("t" ora-roam-todo "todo"))
 
 (org-roam-mode)
 
@@ -48,5 +50,17 @@
   (ivy-read "File: " (org-roam--get-title-path-completions)
             :action #'ora-org-roam-find-file-action
             :caller 'ora-org-roam-find-file))
+
+(defun ora-roam-todo ()
+  "An ad-hoc agenda for `org-roam'."
+  (interactive)
+  (let* ((regex "^\\* TODO")
+         (b (get-buffer (concat "*ivy-occur counsel-rg \"" regex "\"*"))))
+    (if b
+        (progn
+          (switch-to-buffer b)
+          (ivy-occur-revert-buffer))
+      (setq unread-command-events (listify-key-sequence (kbd "C-c C-o M->")))
+      (counsel-rg regex org-roam-directory "--sort modified"))))
 
 (provide 'ora-org-roam)
