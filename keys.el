@@ -228,31 +228,34 @@
 (defhydra hydra-k (:exit t :idle 0.8)
   "Misc command launcher."
   ("a" orfu-agenda-day "agenda")
-  ("b" winner-undo "browse" :exit nil)
+  ("b" org-mark-ring-goto "back" :exit nil)
   ("c" cook "cook :")
   ("d" define-word-at-point "def")
   ("e" ora-ediff-dwim "ediff")
-  ("f" hydra--universal-argument "C-u" :exit nil :idle 0.8)
-  ("κ" hydra--universal-argument "C-u" :exit nil :idle 0.8)
-  ("F" ora-flyspell-previous-word "flyspell")
-  ;; ("j" dired-jump "dired")
-  ("j" hydra-org-journal/body "journal")
   ("E" eval-expression "eval")
-  ("m" hydra-pamparam/body "pamparam")
-  ("R" counsel-recoll "recoll")
-  ("r" hydra-org-roam/body "roam")
-  ("o" ora-toggle-buffer "other")
-  ("G" ora-github "github")
+  ("f" hydra--universal-argument "C-u" :exit nil :idle 0.8)
+  ("F" ora-flyspell-previous-word "flyspell")
   ("g" counsel-search "incremental search")
-  ("p" ora-project "project")
-  ("s" hydra-search/body "search")
+  ("G" ora-github "github")
+  ;; "h" "i"
+  ("j" ora-dired-open-term "jump here")
+  ;; "k" "l"
+  ("m" hydra-pamparam/body "pamparam")
   ("n" ora-open-wikitionary "wikitionary")
   ("N" ora-open-google-translate "google-translate")
+  ("o" ora-toggle-buffer "other")
+  ("p" ora-project "project")
+  ("P" ora-password "password")
+  ("q" nil "quit")
+  ("r" hydra-org-roam/body "roam")
+  ("R" counsel-recoll "recoll")
+  ("ρ" hydra-org-roam/body "roam")
+  ("s" hydra-search/body "search")
   ("t" tea-time "tea")
   ("y" avy-copy-region "yank region")
   ("w" plain-org-wiki "wiki")
   ("W" ora-open-wikipedia "wikipedia")
-  ("q" nil "quit"))
+  ("κ" hydra--universal-argument "C-u" :exit nil :idle 0.8))
 
 (autoload 'hydra-org-roam/body "ora-org-roam")
 (autoload 'hydra-org-journal/body "ora-org-journal")
@@ -262,6 +265,7 @@
 (defhydra hydra-toggle (:color pink :hint nil)
   "
 _a_ abbrev-mode:       %`abbrev-mode
+_b_ backup-files:      %`make-backup-files
 _d_ debug-on-error:    %`debug-on-error
 _f_ auto-fill-mode:    %`auto-fill-function
 _h_ highlight          %`highlight-nonselected-windows
@@ -270,6 +274,7 @@ _w_ whitespace-mode:   %`whitespace-mode
 _l_ org link display
 "
   ("a" abbrev-mode)
+  ("b" (setq make-backup-files (not make-backup-files)))
   ("d" toggle-debug-on-error)
   ("e" evil-mode :exit t)
   ("f" auto-fill-mode)
@@ -384,6 +389,13 @@ _v_ariable     valu_e_"
   ;; ("j" zo-insert-outline-below)
   ("h" lispy-insert-outline-left)
   ("p" lispy-insert-prev-outline-body)
+
+  ("f" ora-org-roam-find-file "file")
+  ("i" ora-roam-insert "ins")
+  ("r" org-roam-random-note "rnd")
+  ("b" ora-org-roam-find-backlink "back")
+  ("t" ora-roam-todo "todo")
+
   ("C-o" nil nil))
 (hydra-set-property 'hydra-o :verbosity 1)
 

@@ -152,10 +152,20 @@ When ARG is non-nil launch `query-replace-regexp'."
 (defun ora-toggle-buffer ()
   (interactive)
   (let* ((fname (file-name-nondirectory (buffer-file-name)))
-         (oname (cond ((string-match "^ora-\\(.*\\)$" fname)
-                       (format "../personal/modes/pora-%s" (match-string 1 fname)))
-                      ((string-match "^pora-\\(.*\\)$" fname)
-                       (format "../../modes/ora-%s" (match-string 1 fname))))))
+         (oname (cond
+                  ((string= "init.el" fname)
+                   "personal/personal-init.el")
+                  ((string= "personal-init.el" fname)
+                   "../init.el")
+                  ((string-match "^ora-\\(.*\\)$" fname)
+                   (format "../personal/modes/pora-%s" (match-string 1 fname)))
+                  ((string-match "^pora-\\(.*\\)$" fname)
+                   (format "../../modes/ora-%s" (match-string 1 fname)))
+                  ((and (string-match "org$" fname)
+                        (save-excursion
+                          (goto-char (point-min))
+                          (re-search-forward "\\[\\[file:\\([^]]+\\)\\]\\[Archive\\]\\]" nil t)
+                          (match-string-no-properties 1)))))))
     (when oname
       (find-file oname))))
 
@@ -882,3 +892,5 @@ wmctrl -r \"emacs@firefly\" -e \"1,0,0,1280,720\""))
     :error (cl-function
             (lambda (&rest args &key error-thrown &allow-other-keys)
               (message "Can't receive ipinfo. Error %S " error-thrown)))))
+
+(define-obsolete-function-alias 'string-to-int 'string-to-number)

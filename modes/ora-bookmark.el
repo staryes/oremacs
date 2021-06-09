@@ -33,9 +33,12 @@
 
 (defun bmk/remote-shell ()
   (interactive)
-  (ivy-read "ssh: " (ora-remote-hosts)
+  (ivy-read "ssh: " (cons "localhost" (ora-remote-hosts))
             :action (lambda (h)
-                      (let ((default-directory (concat "/ssh:" h ":/")))
+                      (let ((default-directory
+                             (if (string= h "localhost")
+                                 default-directory
+                               (concat "/ssh:" h ":/"))))
                         (ora-dired-open-term)))))
 
 (defun bmk/remote-dired ()
@@ -43,5 +46,19 @@
   (ivy-read "ssh: " (ora-remote-hosts)
             :action (lambda (h)
                       (dired (concat "/ssh:" h ":/")))))
+
+(defun ora-add-bookmark-command-action (cmd)
+  (let ((entry `(,(concat ": " cmd)
+                  (filename . "   - no file -")
+                  (position . 0)
+                  (function . ,(intern cmd))
+                  (handler . bmk/function))))
+    (cl-pushnew entry bookmark-alist)))
+
+(defun ora-add-bookmark-command ()
+  "Add a command action."
+  (interactive)
+  (let ((ivy-inhibit-action #'ora-add-bookmark-command-action))
+    (counsel-M-x)))
 
 (provide 'ora-bookmark)

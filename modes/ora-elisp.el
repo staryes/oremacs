@@ -69,6 +69,10 @@
 (font-lock-add-keywords 'emacs-lisp-mode
                         (ora-fontify-glyph "\\\\\\\\)" ")"))
 (font-lock-add-keywords 'emacs-lisp-mode
+                        (ora-fontify-glyph "\\\\\\\\{" "{"))
+(font-lock-add-keywords 'emacs-lisp-mode
+                        (ora-fontify-glyph "\\\\\\\\}" "}"))
+(font-lock-add-keywords 'emacs-lisp-mode
                         '(("^;;;###[-a-z]*autoload.*$" 0 'shadow t))
                         'end)
 
@@ -114,6 +118,5 @@
 
 (add-hook 'edebug-setup-hook 'ora-edebug-hook)
 
-
-;;* Provide
+(require 'pora-elisp nil t)
 (provide 'ora-elisp)

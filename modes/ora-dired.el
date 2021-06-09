@@ -189,9 +189,11 @@ Number of marked items: %(length (dired-get-marked-files))
 (define-key dired-mode-map "P" 'ora-dired-show-octal-permissions)
 (define-key dired-mode-map "T" 'ora-dired-terminal)
 (define-key dired-mode-map "&" 'ora-dired-do-async-shell-command)
+(define-key dired-mode-map (kbd "C-o") 'ora-open-line)
 
 (defun ora-dired-terminal ()
   (interactive)
+  (require 'orly)
   (orly-start "gnome-terminal"))
 
 (defun ora-dired-other-window ()
@@ -240,9 +242,6 @@ Number of marked items: %(length (dired-get-marked-files))
              `(,tramp-file-name-regexp . nil))
 (setq tramp-chunksize 8192)
 
-(autoload 'org-download-enable "org-download")
-(add-hook 'dired-mode-hook 'org-download-enable)
-
 ;;;###autoload
 (defun ora-dired-hook ()
   (mis-mode 1)
@@ -289,9 +288,10 @@ Number of marked items: %(length (dired-get-marked-files))
   (interactive)
   (let ((target (dired-dwim-target-directory)))
     (if (file-remote-p target)
-        (progn
-          (dired-rsync target)
-          (message "pls remove"))
+        (if (or (equal target default-directory)
+                (string-match-p "/sudo:" target))
+            (dired-do-rename)
+          (dired-rsync target))
       (dired-do-rename))))
 
 (require 'pora-dired nil t)

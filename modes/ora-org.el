@@ -1,8 +1,10 @@
 ;;* Requires
+(require 'pora-org nil t)
 (use-package async)
-(use-package plain-org-wiki)
 (require 'ora-org-babel)
+
 ;; (require 'ora-org-roam)
+
 (setq org-export-backends '(html latex))
 (setq org-export-with-sub-superscripts nil)
 (setq org-catch-invisible-edits 'smart)
@@ -25,7 +27,8 @@
 (use-package org-download
   :config
   (org-download-enable)
-  (setq org-download-display-inline-images nil)
+  (setq org-startup-with-inline-images t)
+  (setq org-download-display-inline-images t)
   (setq org-download-method 'attach))
 
 (use-package orca)
@@ -45,14 +48,39 @@
   (worf-mode)
   (org-bullets-mode)
   (org-indent-mode)
-  (setq fill-column 85)
+  (setq fill-column 90)
   (auto-fill-mode)
   (add-to-list 'prettify-symbols-alist
                '(":PROPERTIES:" . ":"))
   (prettify-symbols-mode)
-  (setq-local tab-always-indent 'complete))
+  (when (file-equal-p default-directory org-roam-directory)
+    (when (string-match-p "[а-я]" (buffer-string))
+      (ispell-change-dictionary "en_US,uk_UA"))
+    ;; (wucuo-start)
+    )
+  (ora-org-hide-archive-heading)
+  (setq-local tab-always-indent 'complete)
+  (cl-pushnew 'ora-org-dont-fill-links fill-nobreak-predicate))
+
+(defun ora-org-hide-archive-heading ()
+  (save-excursion
+    (when (progn
+            (goto-char (point-min))
+            (search-forward "* Archive" nil t))
+      (outline-flag-subtree t))))
 
 (setq org-agenda-max-entries nil)
+;; Hide tasks that are scheduled in the future.
+(setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-agenda-todo-ignore-time-comparison-use-seconds t)
+;; Hide the deadline prewarning prior to scheduled date.
+(setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+
+;; (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+;; (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
+;; (setq org-agenda-skip-additional-timestamps-same-entry t)
+
+(setq org-agenda-todo-ignore-with-date t)
 
 ;;;###autoload
 (defun ora-org-agenda-hook ())
@@ -65,6 +93,9 @@
 (define-key org-mode-map (kbd "C-M-i") 'ora-org-complete-symbol)
 (define-key org-mode-map (kbd "C-m") 'newline)
 (define-key org-mode-map (kbd "C-c C-r") nil)
+(define-key org-mode-map (kbd "C-p") 'ora-org-previous-line)
+(define-key org-mode-map (kbd "C-n") 'ora-org-next-line)
+(define-key org-mode-map (kbd "M-b") 'ora-org-backward-word)
 (define-key org-mode-map [C-tab] nil)
 (define-key org-mode-map (kbd "<f2> a") 'org-archive)
 (define-key org-mode-map (kbd "χ") 'worf-back-to-heading)
@@ -92,7 +123,7 @@
   (define-key map "a" 'worf-reserved)
   (define-key map "b" 'worf-reserved)
   (define-key map "c" 'worf-reserved)
-  (define-key map "d" 'worf-reserved)
+  (define-key map "d" 'org-agenda-goto-date)
   (define-key map "e" 'worf-reserved)
   (define-key map "f" 'worf-reserved)
   (define-key map "n" 'worf-reserved)
@@ -142,19 +173,22 @@
 
 ;;* Basic settings
 (setq-default org-todo-keywords
-              '((sequence "TODO"
-                 "WAITING" "PAUSED"
-                 ;; "NEXT"
-                 "|" "DONE" "CANCELLED")))
+              '((sequence
+                 "TODO" "NEXT" "PROG"
+                 "WAIT" "LIST"
+                 "|" "DONE" "DROP(r)")))
 (setq org-todo-keyword-faces
       '(("TODO" . (:foreground "red" :weight bold))
-        ("WAITING" . (:foreground "blue" :weight bold))
-        ("PAUSED" . (:foreground "orange" :weight bold))))
+        ("NEXT" . (:foreground "red" :weight bold))
+        ("PROG" . (:foreground "red" :weight bold))
+        ("WAIT" . (:foreground "blue" :weight bold))
+        ("LIST" . (:foreground "orange" :weight bold))))
 (setq org-startup-indented t)
 (setq org-startup-folded nil)
 (setq org-cycle-separator-lines 0)
 
 (setq org-return-follows-link t)
+(setq org-link-search-must-match-exact-headline nil)
 ;; open links in the same window
 (setf (cdr (assq 'file org-link-frame-setup)) 'find-file)
 
@@ -641,5 +675,31 @@ _y_: ?y? year       _q_: quit           _L__l__c_: log = ?l?"
    (split-string
     "xclip -verbose -i /tmp/org.html -t text/html -selection clipboard" " ")))
 
-(require 'pora-org nil t)
+(defun ora-org-dont-fill-links ()
+  (when (get-text-property (point) 'htmlize-link)
+    (if (looking-at "\\[")
+        (skip-chars-backward "[")
+      (ignore-errors
+        (backward-up-list 2)))
+    t))
+
+(defun ora-org-beginning-of-link ()
+  (when (looking-back "\\]\\[" (line-beginning-position))
+    (search-backward "[[" (line-beginning-position) t)))
+
+(defun ora-org-next-line ()
+  (interactive)
+  (forward-line 1)
+  (ora-org-beginning-of-link))
+
+(defun ora-org-previous-line ()
+  (interactive)
+  (forward-line -1)
+  (ora-org-beginning-of-link))
+
+(defun ora-org-backward-word ()
+  (interactive)
+  (forward-word -1)
+  (ora-org-beginning-of-link))
+
 (provide 'ora-org)

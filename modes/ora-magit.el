@@ -204,6 +204,7 @@
     (let ((item (magit-section-info (magit-current-section)))
           action)
       (ignore-errors (magit-stage-item))
+      (sit-for 0.1)
       (search-forward item)
       (setq action (if (looking-back "^\tNew.*" (line-beginning-position))
                        "Add"
@@ -218,24 +219,5 @@
     (orly-start
      "git difftool" (list item))))
 
-(defun ora-new-gitlab-project (name)
-  (interactive "sname: ")
-  (unless (file-exists-p "data")
-    (error "Expected ./data/"))
-  (let ((url (format "git@throw-away:throw-away/%s" name)))
-    (sc (concat "cd data && "
-                "git init && "
-                "git checkout -b data &&"
-                "git add . && "
-                "git commit -m 'Initial import' && "
-                "git remote add origin " url))
-    (sc "git init")
-    (sc "git add .")
-    (sc "git rm -r -f --cached data")
-    (sc (concat "git remote add origin " url))
-    (sc (concat "git submodule add -b data " url " data/"))
-    (sc "git commit -m 'Initial import'")
-    (sc "git push -f -u origin master")
-    (sc "cd data && git push -u origin data")))
-
+(require 'pora-magit nil t)
 (provide 'ora-magit)

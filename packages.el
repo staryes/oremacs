@@ -89,6 +89,7 @@
     rust-mode
     slime
     (smex :host github :repo "abo-abo/smex")
+    super-save
     tea-time
     (touchpad :host github :repo "abo-abo/touchpad")
     transpose-frame
@@ -99,6 +100,7 @@
     (whicher :host github :repo "abo-abo/whicher")
     which-key
     worf
+    wucuo
     yaml-mode
     yasnippet)
   "List of packages that I like.")

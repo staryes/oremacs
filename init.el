@@ -26,23 +26,16 @@
   (setq package-user-dir (expand-file-name "elpa" emacs-d))
   (when (< emacs-major-version 27)
     (package-initialize)))
-;;* Font
-(require 'ora-fonts)
-;;* Customize
+
 (defmacro csetq (variable value)
   `(funcall (or (get ',variable 'custom-set) 'set-default) ',variable ,value))
 (defun ora-advice-add (&rest args)
   (when (fboundp 'advice-add)
     (apply #'advice-add args)))
-;;** decorations
-(csetq tool-bar-mode nil)
-(csetq menu-bar-mode nil)
-(csetq scroll-bar-mode nil)
-(csetq truncate-lines t)
-(csetq inhibit-startup-screen t)
-(csetq initial-scratch-message "")
-(csetq text-quoting-style 'grave)
-(csetq line-number-display-limit-width 2000000)
+
+(require 'ora-visuals)
+
+;;* Customize
 ;;** navigation within buffer
 (csetq next-screen-context-lines 5)
 (csetq recenter-positions '(top middle bottom))
@@ -75,10 +68,7 @@
 ;;** internals
 (csetq gc-cons-threshold (* 10 1024 1024))
 (csetq ad-redefinition-action 'accept)
-;;** time display
-(csetq display-time-24hr-format t)
-(csetq display-time-default-load-average nil)
-(csetq display-time-format "")
+
 ;;** Rest
 (csetq browse-url-browser-function 'browse-url-firefox)
 (csetq browse-url-firefox-program (whicher "firefox"))
@@ -125,23 +115,14 @@
   '(progn
     (setq xref-pulse-on-jump nil)
     (setq xref-after-return-hook nil)))
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (use-package diminish)
 (require 'ora-ivy)
 (setq hippie-expand-verbose nil)
 (blink-cursor-mode -1)
-(add-to-list 'auto-mode-alist '("\\.tex\\'" . TeX-latex-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
+(require 'ora-auto)
 (autoload 'mu4e "ora-mu4e")
 (autoload 'mu4e-compose-new "ora-mu4e")
-(add-to-list 'auto-mode-alist '("\\.cache\\'" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(h\\|inl\\)\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.cl\\'" . lisp-mode))
-(add-to-list 'auto-mode-alist '("\\(stack\\(exchange\\|overflow\\)\\|superuser\\|askubuntu\\|reddit\\|github\\)\\.com[a-z-._0-9]+\\.txt" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("trace.txt\\'" . compilation-mode))
-(add-to-list 'auto-mode-alist '("user.txt\\'" . conf-mode))
-(add-to-list 'auto-mode-alist '("tmp_github.com" . markdown-mode))
+
 ;;** major modes
 (use-package cmake-mode
   :mode "CMakeLists\\.txt\\'")
@@ -227,8 +208,6 @@
                 (if (memq system-type '(windows-nt darwin))
                     "-alh"
                   "-laGh1v --group-directories-first")))
-(use-package dired-x
-  :commands dired-jump)
 (use-package helm-j-cheatsheet
   :commands helm-j-cheatsheet)
 (use-package pamparam
@@ -289,10 +268,6 @@
   (run-with-idle-timer
    3 nil
    (lambda () (require 'ora-org))))
-(use-package elf-mode
-  :commands elf-mode
-  :init
-  (add-to-list 'magic-mode-alist (cons "ELF" 'elf-mode)))
 (add-to-list 'warning-suppress-types '(undo discard-info))
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 (ora-advice-add 'semantic-idle-scheduler-function :around #'ignore)
